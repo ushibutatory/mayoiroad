@@ -55,7 +55,7 @@ namespace MayoiRoad.App
 
             app.Command("list", (command) =>
             {
-                command.Description = "まとめて実行します。計算結果をキャッシュするため、計算時間は正確ではありません。";
+                command.Description = "まとめて実行します。";
                 command.HelpOption(helpOption);
 
                 var argN1 = command.Argument("n1", "開始N");
@@ -68,6 +68,7 @@ namespace MayoiRoad.App
                     if (!int.TryParse(argN2.Value, out var n2))
                         return command.Execute("-h");
 
+                    Console.WriteLine("※一度計算したフィボナッチ数はキャッシュするため、計算時間は正確ではありません。");
                     for (var n = n1; n <= n2; n++)
                     {
                         execute(n);
