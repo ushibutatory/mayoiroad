@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.CommandLineUtils;
+using System;
 
 namespace MayoiRoad.App
 {
@@ -11,63 +12,78 @@ namespace MayoiRoad.App
         /// エントリポイント
         /// </summary>
         /// <param name="args"></param>
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            // 計算機を生成
-            var calculator = new Calculator();
+            var app = new CommandLineApplication(throwOnUnexpectedArg: false)
+            {
+                Name = "MayoiRoad.App",
+            };
 
-            // 処理本体
+            // help
+            const string helpOption = "-?|-h|--help";
+            app.HelpOption(template: helpOption);
+
+            // 処理本隊
             var execute = new Action<int>((n) =>
             {
+                var calculator = new Calculator();
                 var start = DateTime.Now;
                 var p = calculator.Execute(n);
                 var end = DateTime.Now;
 
-                Console.WriteLine("Time:{0}, N:{1}, P:{2}", (end - start).ToString(@"hh\:mm\:ss\.ffffff"), n, p);
+                // 結果表示
+                Console.WriteLine($"Time:{end - start:hh\\:mm\\:ss\\.ffffff}, N:{n}, P:{p}");
             });
 
-            try
+            app.Command("calc", (command) =>
             {
-                // 引数の数による分岐
-                switch (args.Length)
+                command.Description = "計算を実行します。";
+                command.HelpOption(helpOption);
+
+                var argN = command.Argument("n", "対象の数値");
+
+                command.OnExecute(() =>
                 {
-                    case 1:
-                        if (int.TryParse(args[0], out var n))
-                        {
-                            Console.WriteLine("N={0}を計算中...", n);
-                            execute(n);
-                        }
-                        else
-                        {
-                            Console.WriteLine("数値を指定してね");
-                        }
-                        break;
-                    case 2:
-                        if (int.TryParse(args[0], out var n1) && int.TryParse(args[1], out var n2))
-                        {
-                            Console.WriteLine("N={0}から順に計算中...", n1);
-                            for (var i = n1; i <= n2; i++)
-                            {
-                                execute(i);
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("数値を指定してね");
-                        }
-                        break;
-                    default:
-                        Console.WriteLine("Nを数値で指定してね");
-                        Console.WriteLine("例）MayoiRoad.exe 10");
-                        Console.WriteLine("例）MayoiRoad.exe 1 10");
-                        break;
-                }
-            }
-            catch (Exception ex)
+                    if (!int.TryParse(argN.Value, out var n))
+                        return command.Execute("-h");
+
+                    execute(n);
+
+                    return 0;
+                });
+            });
+
+            app.Command("list", (command) =>
             {
-                Console.WriteLine(ex.Message);
-            }
-            Console.WriteLine("--");
+                command.Description = "まとめて実行します。計算結果をキャッシュするため、計算時間は正確ではありません。";
+                command.HelpOption(helpOption);
+
+                var argN1 = command.Argument("n1", "開始N");
+                var argN2 = command.Argument("n2", "終了N");
+
+                command.OnExecute(() =>
+                {
+                    if (!int.TryParse(argN1.Value, out var n1))
+                        return command.Execute("-h");
+                    if (!int.TryParse(argN2.Value, out var n2))
+                        return command.Execute("-h");
+
+                    for (var n = n1; n <= n2; n++)
+                    {
+                        execute(n);
+                    }
+
+                    return 0;
+                });
+            });
+
+            app.OnExecute(() =>
+            {
+                // 引数なしで実行された場合はヘルプ表示
+                return app.Execute("-h");
+            });
+
+            return app.Execute(args);
         }
     }
 }
