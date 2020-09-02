@@ -16,7 +16,7 @@ namespace MayoiRoad.App.Tests
         [InlineData(8, 21)]
         [InlineData(9, 34)]
         [InlineData(10, 55)]
-        public void Test(int n, int expected)
+        public void Value(int n, int expected)
         {
             Assert.Equal(expected, Fibonacci.Value(n));
         }
