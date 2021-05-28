@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.CommandLineUtils;
 using System;
+using System.Diagnostics;
 
 namespace MayoiRoad.App
 {
@@ -27,12 +28,13 @@ namespace MayoiRoad.App
             var execute = new Action<int>((n) =>
             {
                 var calculator = new Calculator();
-                var start = DateTime.Now;
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
                 var p = calculator.Execute(n);
-                var end = DateTime.Now;
+                stopwatch.Stop();
 
                 // 結果表示
-                Console.WriteLine($"Time:{end - start:hh\\:mm\\:ss\\.ffffff}, N:{n}, P:{p}");
+                Console.WriteLine($"Time:{stopwatch.Elapsed:hh\\:mm\\:ss\\.ffffff}, N:{n}, P:{p}");
             });
 
             app.Command("calc", (command) =>
