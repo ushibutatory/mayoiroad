@@ -23,7 +23,7 @@ namespace MayoiRoad.App
             const string helpOption = "-?|-h|--help";
             app.HelpOption(template: helpOption);
 
-            // 処理本隊
+            // 処理本体
             var execute = new Action<int>((n) =>
             {
                 var calculator = new Calculator();
