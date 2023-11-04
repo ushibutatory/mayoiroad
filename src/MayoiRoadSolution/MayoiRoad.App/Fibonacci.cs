@@ -11,7 +11,7 @@ namespace MayoiRoad.App
         /// <summary>
         /// 生成済みの数列を取得します。
         /// </summary>
-        private static readonly Dictionary<int, BigInteger> _cache = new Dictionary<int, BigInteger>();
+        private static readonly Dictionary<int, BigInteger> _cache = new();
 
         /// <summary>
         /// フィボナッチ数列の値を取得します。
