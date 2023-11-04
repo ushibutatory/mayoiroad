@@ -16,7 +16,7 @@ namespace MayoiRoad.App
         /// Key  :折り返し数
         /// Value:Yルート数
         /// </remarks>
-        private readonly Dictionary<int, BigInteger> _list = new Dictionary<int, BigInteger>();
+        private readonly Dictionary<int, BigInteger> _list = new();
 
         /// <summary>
         /// Pを計算します。

@@ -11,7 +11,7 @@ namespace MayoiRoad.App
         /// <summary>
         /// 生成済みの数列を取得します。
         /// </summary>
-        private static readonly Dictionary<int, BigInteger> _cache = new Dictionary<int, BigInteger>();
+        private static readonly Dictionary<int, BigInteger> _cache = new();
 
         /// <summary>
         /// フィボナッチ数列の値を取得します。
@@ -20,9 +20,12 @@ namespace MayoiRoad.App
         /// <returns>値</returns>
         public static BigInteger Value(int n)
         {
-            if (!_cache.ContainsKey(n))
+            lock (_cache)
             {
-                _cache.Add(n, _Calc(n));
+                if (!_cache.ContainsKey(n))
+                {
+                    _cache.Add(n, _Calc(n));
+                }
             }
 
             return _cache[n];
