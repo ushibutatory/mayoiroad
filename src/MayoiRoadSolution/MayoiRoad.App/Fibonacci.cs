@@ -20,9 +20,12 @@ namespace MayoiRoad.App
         /// <returns>値</returns>
         public static BigInteger Value(int n)
         {
-            if (!_cache.ContainsKey(n))
+            lock (_cache)
             {
-                _cache.Add(n, _Calc(n));
+                if (!_cache.ContainsKey(n))
+                {
+                    _cache.Add(n, _Calc(n));
+                }
             }
 
             return _cache[n];
