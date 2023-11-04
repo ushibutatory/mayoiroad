@@ -4,3 +4,10 @@ updates:
     directory: "/src/MayoiRoadSolution/"
     schedule:
       interval: "monthly"
+    target-branch: "develop"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+    reviewers:
+      - "ushibutatory"
